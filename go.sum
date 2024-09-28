@@ -1,0 +1,6 @@
+github.com/eryalito/vigo-bus-core-go-client v0.0.0-20240925191053-a5be7ea595a0 h1:6UZgsPRinj+Xws26hVL6fsoxF9aJaeNlfSv/9gRdVFk=
+github.com/eryalito/vigo-bus-core-go-client v0.0.0-20240925191053-a5be7ea595a0/go.mod h1:xQN9eenNYroBsFar+A8vQJK9MQraMH5cjt3N8+MjxuU=
+github.com/eryalito/vigo-bus-core-go-client v0.0.0-20240926190242-bdc4d2b065c8 h1:Rczd5z9lh0tpV0c33WkXEkYpe4SR6eATPEs75AyzJ4w=
+github.com/eryalito/vigo-bus-core-go-client v0.0.0-20240926190242-bdc4d2b065c8/go.mod h1:xQN9eenNYroBsFar+A8vQJK9MQraMH5cjt3N8+MjxuU=
+github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1 h1:wG8n/XJQ07TmjbITcGiUaOtXxdrINDz1b0J1w0SzqDc=
+github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1/go.mod h1:A2S0CWkNylc2phvKXWBBdD3K0iGnDBGbzRpISP2zBl8=
