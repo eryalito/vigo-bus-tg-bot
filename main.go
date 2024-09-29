@@ -60,9 +60,7 @@ func processUpdate(update tgbotapi.Update, bot *tgbotapi.BotAPI, client *apiclie
 		case strings.HasPrefix(update.Message.Text, "/search"):
 			go handlers.FindHandler(identity, bot, update.Message, client)
 		case matchRegex(update.Message.Text, `^/\d+$`):
-			handlers.ScheduleHandler(identity, bot, update.Message, client)
-		case matchRegex(update.Message.Text, `^/\d+L$`):
-			handlers.StopLocationHandler(identity, bot, update.Message, client)
+			handlers.StopInfoHandler(identity, bot, update.Message, client)
 		default:
 			if update.Message.Location != nil {
 				handlers.LocationHandler(identity, bot, update.Message, client)

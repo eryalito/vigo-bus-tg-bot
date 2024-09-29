@@ -10,7 +10,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func ScheduleHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, message *tgbotapi.Message, client *apiclient.APIClient) {
+func StopInfoHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, message *tgbotapi.Message, client *apiclient.APIClient) {
 	// Parse the message to get the stop id
 	stopString := message.Text[1:]
 	stopNumber, err := strconv.Atoi(stopString)
@@ -21,7 +21,7 @@ func ScheduleHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, mess
 	}
 
 	requestStop := apiclient.ApiApiStopsStopNumberGetRequest(client.BusAPI.ApiStopsStopNumberScheduleGet(context.Background(), int32(stopNumber)))
-	_, _, err = requestStop.Execute()
+	stopInfo, _, err := requestStop.Execute()
 	if err != nil {
 		log.Println(err)
 		msg := tgbotapi.NewMessage(message.Chat.ID, "Stop not found")
@@ -29,10 +29,16 @@ func ScheduleHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, mess
 		return
 	}
 
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Parada "+stopString+": "+*stopInfo.Name)
+	bot.Send(msg)
+
+	locationMessage := tgbotapi.NewLocation(message.Chat.ID, float64(*stopInfo.Location.Lat), float64(*stopInfo.Location.Lon))
+	bot.Send(locationMessage)
+
 	requestSchedule := apiclient.ApiApiStopsStopNumberScheduleGetRequest(client.BusAPI.ApiStopsStopNumberScheduleGet(context.Background(), int32(stopNumber)))
 	schedule, _, err := requestSchedule.Execute()
 	if err != nil {
-		log.Println(err)
+		log.Println("Error getting stop schedule:", err)
 		msg := tgbotapi.NewMessage(message.Chat.ID, "Schedule not found")
 		bot.Send(msg)
 		return
