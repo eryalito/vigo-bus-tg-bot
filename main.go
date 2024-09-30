@@ -45,7 +45,7 @@ func processUpdate(update tgbotapi.Update, bot *tgbotapi.BotAPI, client *apiclie
 		if config.Debug {
 			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 		}
-		identity, err := handlers.InsertHandler(nil, bot, update.Message, client)
+		identity, err := handlers.InsertHandler(nil, bot, update.Message.Chat.ID, client)
 		if err != nil || identity == nil {
 			log.Println(err)
 			bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Failed to process the message"))
@@ -70,6 +70,30 @@ func processUpdate(update tgbotapi.Update, bot *tgbotapi.BotAPI, client *apiclie
 			}
 			handlers.UnknownHandler(identity, bot, update.Message, client)
 		}
+		return
+	}
+
+	if update.CallbackQuery != nil {
+		if config.Debug {
+			log.Printf("[%s] %s", update.CallbackQuery.From.UserName, update.CallbackQuery.Data)
+		}
+		identity, err := handlers.InsertHandler(nil, bot, update.CallbackQuery.From.ID, client)
+		if err != nil || identity == nil {
+			log.Println(err)
+			bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Failed to process the message"))
+			return
+		}
+		switch {
+		case strings.HasPrefix(update.CallbackQuery.Data, "/fav"):
+			handlers.FavoriteCallbackHandler(identity, bot, update.CallbackQuery, client)
+		case strings.HasPrefix(update.CallbackQuery.Data, "/follow"):
+			handlers.FollowCallbackHandler(identity, bot, update.CallbackQuery, client)
+		case matchRegex(update.CallbackQuery.Data, `^/\d+$`):
+			handlers.StopInfoCallbackHandler(identity, bot, update.CallbackQuery, client)
+		default:
+			// Unknown command
+		}
+		return
 	}
 }
 

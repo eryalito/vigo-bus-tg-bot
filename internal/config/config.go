@@ -7,11 +7,12 @@ import (
 )
 
 var (
-	APIURL      string
-	APIProtocol string
-	APIToken    string
-	BotToken    string
-	Debug       bool
+	APIURL                                string
+	APIProtocol                           string
+	APIToken                              string
+	BotToken                              string
+	Debug                                 bool
+	MaxTimeAllowedForCallbackAfterMessage int
 )
 
 func Init() {
@@ -28,6 +29,14 @@ func Init() {
 		debugValue = false
 	}
 	flag.BoolVar(&Debug, "debug", debugValue, "Enable debug mode")
+
+	// Convert the MAX_TIME_ALLOWED_FOR_CALLBACK_AFTER_MESSAGE environment variable to an int
+	maxTimeAllowedForCallbackAfterMessageEnv := getEnv("MAX_TIME_ALLOWED_FOR_CALLBACK_AFTER_MESSAGE", "60")
+	maxTimeAllowedForCallbackAfterMessageValue, err := strconv.Atoi(maxTimeAllowedForCallbackAfterMessageEnv)
+	if err != nil {
+		maxTimeAllowedForCallbackAfterMessageValue = 60
+	}
+	flag.IntVar(&MaxTimeAllowedForCallbackAfterMessage, "max-time-allowed-for-callback-after-message", maxTimeAllowedForCallbackAfterMessageValue, "Enable debug mode")
 
 	// Parse command-line flags
 	flag.Parse()
