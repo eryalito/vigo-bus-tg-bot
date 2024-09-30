@@ -10,6 +10,8 @@ func HelpHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, message 
 /start - Mensaje de bienvenida
 /help - Mensaje de ayuda
 /search [texto] - Buscar paradas por texto
+/fav - Listar paradas favoritas
+/fav [número parada] - Añadir o eliminar una parada de favoritos
 /[número parada] - Ver información y el horario en tiempo real de la parada
 
 Envíame una ubicación para ver las paradas cercanas!

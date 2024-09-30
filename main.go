@@ -58,7 +58,9 @@ func processUpdate(update tgbotapi.Update, bot *tgbotapi.BotAPI, client *apiclie
 		case strings.HasPrefix(update.Message.Text, "/start"):
 			handlers.StartHandler(identity, bot, update.Message, client)
 		case strings.HasPrefix(update.Message.Text, "/search"):
-			go handlers.FindHandler(identity, bot, update.Message, client)
+			handlers.FindHandler(identity, bot, update.Message, client)
+		case strings.HasPrefix(update.Message.Text, "/fav"):
+			handlers.FavoriteHandler(identity, bot, update.Message, client)
 		case matchRegex(update.Message.Text, `^/\d+$`):
 			handlers.StopInfoHandler(identity, bot, update.Message, client)
 		default:
