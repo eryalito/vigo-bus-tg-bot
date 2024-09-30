@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"log"
 	"os"
 	"strconv"
 )
@@ -13,6 +14,7 @@ var (
 	BotToken                              string
 	Debug                                 bool
 	MaxTimeAllowedForCallbackAfterMessage int
+	FollowTaskEvalInterval                int
 )
 
 func Init() {
@@ -26,7 +28,7 @@ func Init() {
 	debugEnv := getEnv("DEBUG", "false")
 	debugValue, err := strconv.ParseBool(debugEnv)
 	if err != nil {
-		debugValue = false
+		log.Fatalln("Invalid value for DEBUG")
 	}
 	flag.BoolVar(&Debug, "debug", debugValue, "Enable debug mode")
 
@@ -34,9 +36,17 @@ func Init() {
 	maxTimeAllowedForCallbackAfterMessageEnv := getEnv("MAX_TIME_ALLOWED_FOR_CALLBACK_AFTER_MESSAGE", "60")
 	maxTimeAllowedForCallbackAfterMessageValue, err := strconv.Atoi(maxTimeAllowedForCallbackAfterMessageEnv)
 	if err != nil {
-		maxTimeAllowedForCallbackAfterMessageValue = 60
+		log.Fatalln("Invalid value for MAX_TIME_ALLOWED_FOR_CALLBACK_AFTER_MESSAGE")
 	}
-	flag.IntVar(&MaxTimeAllowedForCallbackAfterMessage, "max-time-allowed-for-callback-after-message", maxTimeAllowedForCallbackAfterMessageValue, "Enable debug mode")
+	flag.IntVar(&MaxTimeAllowedForCallbackAfterMessage, "max-time-allowed-for-callback-after-message", maxTimeAllowedForCallbackAfterMessageValue, "Invalidation time for callbacks")
+
+	// Convert the FOLLOW_TASK_EVAL_INTERVAL environment variable to an int
+	followTaskEvalIntervalEnv := getEnv("FOLLOW_TASK_EVAL_INTERVAL", "5")
+	followTaskEvalIntervalValue, err := strconv.Atoi(followTaskEvalIntervalEnv)
+	if err != nil {
+		log.Fatalln("Invalid value for FOLLOW_TASK_EVAL_INTERVAL")
+	}
+	flag.IntVar(&FollowTaskEvalInterval, "follow-task-eval-interval", followTaskEvalIntervalValue, "Timer interval for follow task evaluation")
 
 	// Parse command-line flags
 	flag.Parse()

@@ -8,6 +8,7 @@ import (
 
 	apiclient "github.com/eryalito/vigo-bus-core-go-client"
 	"github.com/eryalito/vigo-bus-tg-bot/internal/config"
+	"github.com/eryalito/vigo-bus-tg-bot/internal/follow"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -42,11 +43,28 @@ func FollowCallbackHandler(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI
 	matches = regex.FindStringSubmatch(callback.Data)
 	if len(matches) > 0 {
 		// create a new follow
+		var stopNumber, lineID, time int
+		fmt.Sscanf(callback.Data, "/follow %d %d %d", &stopNumber, &lineID, &time)
+		createFollow(identity, bot, callback.Message, stopNumber, lineID, time, client)
+		msg := tgbotapi.NewMessage(callback.Message.Chat.ID, "Siguiendo la línea")
+		bot.Send(msg)
 		return
 	}
 
 	msg := tgbotapi.NewMessage(callback.Message.Chat.ID, "No se puede procesar la petición")
 	bot.Send(msg)
+}
+
+func createFollow(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, message *tgbotapi.Message, stopNumber, lineID, desiredETA int, client *apiclient.APIClient) {
+	follow.FollowTaskManagerInstance.AddTask(follow.FollowTask{
+		StopNumber: stopNumber,
+		LineID:     lineID,
+		DesiredETA: desiredETA,
+		ChatID:     message.Chat.ID,
+		Client:     client,
+		Bot:        bot,
+		Manager:    follow.FollowTaskManagerInstance,
+	}, time.Duration(config.FollowTaskEvalInterval)*time.Second)
 }
 
 func updateMessageButtons(identity *apiclient.ApiIdentity, bot *tgbotapi.BotAPI, message *tgbotapi.Message, stopNumber int, lineID int, client *apiclient.APIClient) {
