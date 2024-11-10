@@ -10,7 +10,7 @@ COPY . .
 
 RUN go build -o /app/main .
 
-FROM scratch
+FROM ubuntu:24.04
 
 COPY --from=build /app/main /app/main
 
