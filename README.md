@@ -8,6 +8,7 @@ Vigo Bus Telegram Bot (unofficial). Get routes, stops and real time info about t
 - Routes
 - Stops
 - Real time schedules
+- Alerts for close buses (receive a message when a bus is under X minutes to the stop)
 
 ## Prerequisites
 
